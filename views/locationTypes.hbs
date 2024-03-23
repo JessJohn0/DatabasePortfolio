@@ -1,0 +1,145 @@
+<!--Citation for the following functions:
+Date: 3/9/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://handlebarsjs.com/guide/block-helpers.html#basic-block-variation
+-->
+
+<!--Citation for the following functions:
+Date: 3/9/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://stackoverflow.com/questions/41764373/how-to-register-custom-handlebars-helpers
+-->
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+-->
+
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%206%20-%20Dynamically%20Filling%20Dropdowns%20and%20Adding%20a%20Search%20Box
+-->
+
+<!--locationTypes.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Location Types</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Source+Sans+3:ital@0;1&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Store Location Types</h1>
+        <!--The links for navigation -->
+        <nav>
+            <ul>
+                <li><a href="/">HOME</a></li>
+                <li><a href="/stores">Stores</a></li>
+                <li><a href="locationTypes">Location Type</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/productCategories">Product Categories</a></li>
+                <li><a href="/suppliers">Suppliers</a></li>
+                <li><a href="/storeProducts">storeProducts</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!--Set up the add form container -->
+        <div class="add-form" id="add-form-container">
+            <h2>Add Store Location Type</h2>
+            <p>Duplicate types are not allowed</p>
+            <form id="add-locationType-form" method="POST" action="/add-locationType-form">
+                <label for="add-type">Type:</label>
+                <input type="text" id="add-type" name="add-type" placeholder="Enter Store Location Type" required>
+                <label for="add-description">Description (Optional):</label>
+                <input type="text" id="add-description" name="add-description" placeholder="Enter Location Type Description">
+                <br>
+                <br>
+                <input type="submit">
+            </form>
+        </div>
+
+        <!--Set up the edit form container -->
+        <div class="edit-form" id="edit-form-container">
+            <h2>Edit Location Type for Stores</h2>
+            <p>Duplicate types are not allowed</p>
+            <form id="edit-locationType-form" >
+                <!-- Creates a dynamically populated dropdown with locationTypeIDs (showing as the ID number)-->
+                <label for="edit-locationTypeID">Location Type ID:</label>
+                <select id="edit-locationTypeID" name="edit-locationTypeID" onchange="updateForm()" onfocus="updateForm()" required>
+                    <option value="">Select location type to edit</option>
+                    {{#each data}}
+                        <option value="{{this.locationTypeID}}">{{this.locationTypeID}}</option>
+                    {{/each}}
+                </select>
+                <label for="edit-type">Type:</label>
+                <input type="text" id="edit-type" name="edit-type" placeholder="Edit Location Type" required>
+                <label for="edit-description">Description (Optional):</label>
+                <input type="text" id="edit-description" name="edit-description" placeholder="Edit Type Description">
+                <br>
+                <br>
+                <input type="submit">
+            </form>
+        </div>
+
+        <!--Set up the search container -->
+        <div class="search-container" id="search-container">
+            <h3>Search </h3>
+            <form id="search-html" method='GET' action='/locationTypes'>
+                <label for="input-type">Search by Type: </label><input type="text" name="type" id="input-type-html-search">     <input type="submit">     <a href='/'><button>Reset</button></a>
+            </form>
+            <br>
+            <br>
+        </div>
+            
+        <!--Dynamically display the table -->
+        <div id="table-container"></div>
+            <h2>Store Location Type Details</h2>
+            <p>A location type must have a unique type. A duplicate type cannot be added.</p>
+            <table id="locationTypes-table">
+                <thead>
+                    <tr>
+                        <th><button onclick="showAddForm()">Add Location type</button></th>
+                        <th></th>
+                        {{#each data.[0]}}
+                        <th>
+                            {{@key}}
+                        </th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each data}}
+                    <tr data-value={{this.locationTypeID}}>
+                        <td><button onclick="showEditForm({{this.locationTypeID}})">Edit</button></td>
+                        <td><button onclick="deleteLocationType({{this.locationTypeID}})">Delete</button></td>
+                        <td>{{this.locationTypeID}}</td>
+                        <td>{{this.type}}</td>
+                        <td>{{this.description}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+
+
+        </div>
+    </main>
+    
+    <script src="./js/show_locationType.js"></script>
+    <script src="./js/add_locationType.js"></script>
+    <script src="./js/update_locationType.js"></script>
+    <script src="./js/delete_locationType.js"></script>
+    
+
+</body>
+</html>

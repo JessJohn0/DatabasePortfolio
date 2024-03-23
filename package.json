@@ -1,0 +1,33 @@
+{
+  "name": "group11project",
+  "version": "1.0.0",
+  "description": "web app for group 11 database project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sohic/cs340grp11.git"
+  },
+  "keywords": [
+    "mysql",
+    "node.js",
+    "group11",
+    "cs340"
+  ],
+  "author": "sohic@oregonstate.edu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sohic/cs340grp11/issues"
+  },
+  "homepage": "https://github.com/sohic/cs340grp11#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "express-handlebars": "^7.1.2",
+    "forever": "^0.14.2",
+    "handlebars-helpers": "^0.10.0",
+    "mysql": "^2.18.1",
+    "path": "^0.12.7"
+  }
+}

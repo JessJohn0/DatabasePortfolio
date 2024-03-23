@@ -1,0 +1,140 @@
+<!--Citation for the following functions:
+Date: 3/9/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://handlebarsjs.com/guide/block-helpers.html#basic-block-variation
+-->
+
+<!--Citation for the following functions:
+Date: 3/9/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://stackoverflow.com/questions/41764373/how-to-register-custom-handlebars-helpers
+-->
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+-->
+
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%206%20-%20Dynamically%20Filling%20Dropdowns%20and%20Adding%20a%20Search%20Box
+-->
+
+<!-- productCategories.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products Categories</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Source+Sans+3:ital@0;1&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Product Categories</h1>
+        <!--The links for navigation -->
+        <nav>
+            <ul>
+                <li><a href="/">HOME</a></li>
+                <li><a href="/stores">Stores</a></li>
+                <li><a href="locationTypes">Location Type</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/productCategories">Product Categories</a></li>
+                <li><a href="/suppliers">Suppliers</a></li>
+                <li><a href="/storeProducts">Store Products</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!--Set up the add form container -->
+        <div class="add-form" id="add-form-container">
+            <h2>Add Product Category</h2>
+            <p>Duplicate categories are not allowed</p>
+            <form id="add-productCategory-form" method="POST" action="/add-productCategory-form">
+                <label for="add-category">Category:</label>
+                <input type="text" id="add-category" name="add-category" placeholder="Enter Product Category" required>
+                <br>
+                <br>
+                <input type="submit">
+            </form>
+        </div>
+
+        <!--Set up the edit form container -->
+        <div class="edit-form" id="edit-form-container">
+            <h2>Edit Category for Products</h2>
+            <p>Duplicate categories are not allowed</p>
+            <form id="edit-productCategory-form" >
+                <!-- Creates a dynamically populated dropdown with productCategoryIDs (showing as the ID number)-->
+                <label for="edit-productCategoryID">Product Category ID:</label>
+                <select id="edit-productCategoryID" name="edit-productCategoryID" onchange="updateForm()" onfocus="updateForm()" required>
+                    <option value="">Select product category to edit</option>
+                    {{#each data}}
+                        <option value="{{this.productCategoryID}}">{{this.productCategoryID}}</option>
+                    {{/each}}
+                </select>
+                <label for="edit-category">Category:</label>
+                <input type="text" id="edit-category" name="edit-category" placeholder="Edit product category" required>
+                <br>
+                <br>
+                <input type="submit">
+            </form>
+        </div>
+
+         <!--Set up the search container -->
+        <div class="search-container" id="search-container">
+            <h3>Search </h3>
+            <form id="search-html" method='GET' action='/productCategories'>
+                <label for="input-category">Search by Category: </label><input type="text" name="category" id="input-category-html-search">     <input type="submit">     <a href='/'><button>Reset</button></a>
+            </form>
+            <br>
+            <br>
+        </div>
+        
+        <!--Dynamically display the table -->
+        <div id="table-container"></div>
+            <h2>Product Category Details</h2>
+            <p>A product category must have a unique category. Duplicate categories cannot be added.</p>
+            <table id="productCategories-table">
+                <thead>
+                    <tr>
+                        <th><button onclick="showAddForm()">Add Product Category</button></th>
+                        <th></th>
+                        {{#each data.[0]}}
+                        <th>
+                            {{@key}}
+                        </th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each data}}
+                    <tr data-value={{this.productCategoryID}}>
+                        <td><button onclick="showEditForm({{this.productCategoryID}})">Edit</button></td>
+                        <td><button onclick="deleteProductCategory({{this.productCategoryID}})">Delete</button></td>
+                        <td>{{this.productCategoryID}}</td>
+                        <td>{{this.category}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+
+
+        </div>
+    </main>
+    
+    <script src="./js/show_productCategory.js"></script>
+    <script src="./js/add_productCategory.js"></script>
+    <script src="./js/update_productCategory.js"></script>
+    <script src="./js/delete_productCategory.js"></script>
+    
+
+</body>
+</html>

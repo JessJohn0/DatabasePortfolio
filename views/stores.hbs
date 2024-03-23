@@ -1,0 +1,176 @@
+<!-- stores.hbs -->
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+-->
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%206%20-%20Dynamically%20Filling%20Dropdowns%20and%20Adding%20a%20Search%20Box
+-->
+
+<!--Citation for the following functions:
+Date: 3/6/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/tel
+For formatting telephone numbers
+-->
+
+<!--Citation for the following functions:
+Date: 3/6/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/email
+For formatting emails
+-->
+
+<!-- stores.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stores</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Source+Sans+3:ital@0;1&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Stores</h1>
+        <!--The links for navigation -->
+        <nav>
+            <ul>
+                <li><a href="/">HOME</a></li>
+                <li><a href="/stores">Stores</a></li>
+                <li><a href="locationTypes">Location Type</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/productCategories">Product Categories</a></li>
+                <li><a href="/suppliers">Suppliers</a></li>
+                <li><a href="/storeProducts">Store Products</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!--Set up the add form container -->
+        <div class="add-form" id="add-form-container">
+            <h2>Add Store</h2>
+            <form id="add-store-form" method="POST" action="/add-store-form">
+                <label for="add-address">Address:</label>
+                <input type="text" id="add-address" name="add-address" placeholder="Enter store address" required>
+                <label for="add-city">City:</label>
+                <input type="text" id="add-city" name="add-city" placeholder="Enter city" required>
+                <label for="add-state">State:</label>
+                <input type="text" id="add-state" name="add-state" placeholder="Enter state" required>
+                <label for="add-telephone">Telephone (include dashes):</label>
+                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" id="add-telephone" name="add-telephone" placeholder="555-555-5555" required>
+                <label for="add-email">Email (@ is required):</label>
+                <input type="email" pattern="[^ @]*@[^ @]*" id="add-email" name="add-email" placeholder="Enter email address" required>
+                <!-- Creates a dynamically populated dropdown with locationTypeIDs (showing as the type)-->
+                <label for="add-locationType">LocationType (Optional):</label>
+                <select id="add-locationType" name="add-locationType">
+                    <option>Select a Location Type</option>
+                    {{#each data.locationType}}
+                    <option value="{{this.locationTypeID}}">{{this.type}}</option>
+                    {{/each}}
+                </select>
+                <br>
+                <br>
+                <input type="submit">
+            </form>
+        </div>
+
+        <!--Set up the edit form container -->
+        <div class="edit-form" id="edit-form-container">
+            <h2>Edit Store</h2>
+            <form id="edit-store-form">
+                <!-- Creates a dynamically populated dropdown with storeIDs (showing as the ID number)-->
+                <label for="edit-storeID">Store ID:</label>
+                <select id="edit-storeID" name="edit-storeID" onchange="updateForm()" onfocus="updateForm()" required>
+                    <option value="">Select Store ID</option>
+                    {{#each data.stores}}
+                        <option value="{{this.storeID}}">{{this.storeID}}</option>
+                    {{/each}}
+                </select>
+                <label for="edit-address">Address:</label>
+                <input type="text" id="edit-address" name="edit-address" required placeholder="Edit store address">
+                <label for="edit-city">City:</label>
+                <input type="text" id="edit-city" name="edit-city" required placeholder="Edit city">
+                <label for="edit-state">State:</label>
+                <input type="text" id="edit-state" name="edit-state" required placeholder="Edit state">
+                <label for="edit-telephone">Telephone (include dashes):</label>
+                <input type="tel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" id="edit-telephone" name="edit-telephone" required placeholder="555-555-5555">
+                <label for="edit-email">Email (@ is required):</label>
+                <input type="email" pattern="[^ @]*@[^ @]*"  id="edit-email" name="edit-email" required placeholder="Edit email">
+                <!-- Creates a dynamically populated dropdown with locationTypeIDs (showing as the type)-->
+                <label for="edit-locationType">LocationType (Optional):</label>
+                <select id="edit-locationType" name="edit-locationType">
+                    <option>Select a Location Type</option>
+                    {{#each data.locationType}}
+                    <option value="{{this.locationTypeID}}">{{this.type}}</option>
+                    {{/each}}
+                </select>
+                <br>
+                <br>
+                <input type="submit">
+            </form>
+        </div>
+
+        <!--Set up the search container -->
+        <div class="search-container" id="search-container">
+            <h3>Search </h3>
+            <form id="search-html" method='GET' action='/stores'>
+                <label for="input-city">Search by City: </label><input type="text" name="city" id="input-city-html-search">     <input type="submit">     <a href='/'><button>Reset</button></a>
+            </form>
+            <br>
+            <br>
+        </div>
+        
+        <!--Dynamically display the table -->
+        <div id="table-container">
+            <h2>Store Details</h2>
+            <p>A store must have a unique email and telephone number. Duplicate emails or telephone numbers cannot be added.</p>
+            <table id="stores-table">
+                <thead>
+                    <tr>
+                        <th><button onclick="showAddForm()">Add Store</button></th>
+                        <th></th>
+                        {{#each data.stores.[0]}}
+                        <th>
+                            {{@key}}
+                        </th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each data.stores}}
+                    <tr data-value={{this.storeID}}>
+                        <td><button onclick="showEditForm({{this.storeID}})">Edit</button></td>
+                        <td><button onclick="deleteStore({{this.storeID}})">Delete</button></td>
+                        <td>{{this.storeID}}</td>
+                        <td>{{this.address}}</td>
+                        <td>{{this.city}}</td>
+                        <td>{{this.state}}</td>
+                        <td>{{this.telephone}}</td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.type}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+
+        </div>
+    </main>
+
+    <script src="./js/show_stores.js"></script>
+    <script src="./js/add_store.js"></script>
+    <script src="./js/update_store.js"></script>
+    <script src="./js/delete_store.js"></script>
+
+</body>
+</html>

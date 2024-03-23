@@ -1,0 +1,211 @@
+<!--Citation for the following functions:
+Date: 3/9/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://handlebarsjs.com/guide/block-helpers.html#basic-block-variation
+-->
+
+<!--Citation for the following functions:
+Date: 3/9/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://stackoverflow.com/questions/41764373/how-to-register-custom-handlebars-helpers
+-->
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+-->
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%206%20-%20Dynamically%20Filling%20Dropdowns%20and%20Adding%20a%20Search%20Box
+-->
+
+<!--Citation for the following functions:
+Date: 3/6/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://stackoverflow.com/questions/43340701/node-js-using-wrong-format-on-dates
+For formatting dates
+-->
+
+<!--Citation for the following functions:
+Date: 3/6/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://stackoverflow.com/questions/34057595/allow-2-decimal-places-in-input-type-number
+This is for editing the totalDue
+-->
+
+<!--Citation for the following functions:
+Date: 3/6/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number
+This is for quantity and totalDue formatting
+-->
+
+<!-- storeProducts.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StoreProducts</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Source+Sans+3:ital@0;1&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Store Products</h1>
+        <!--The links for navigation -->
+        <nav>
+            <ul>
+                <li><a href="/">HOME</a></li>
+                <li><a href="/stores">Stores</a></li>
+                <li><a href="locationTypes">Location Type</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/productCategories">Product Categories</a></li>
+                <li><a href="/suppliers">Suppliers</a></li>
+                <li><a href="/storeProducts">Store Products</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!--Set up the add form container -->
+        <div class="add-form" id="add-form-container">
+            <h2>Add StoreProduct</h2>
+            <form id="add-storeProduct-form" method="POST" action="/add-storeProduct-form">
+                <label for="add-quantity">Quantity (Whole numbers from 1 to 100):</label>
+                <input type="number" min="1" max="100"id="add-quantity" name="add-quantity" name="add-quantity" required placeholder="Enter quantity">
+                <label for="add-dateOrdered">Date Ordered:</label>
+                <input type="date" min="2020-01-01" max="2030-12-31" id="add-dateOrdered" name="add-dateOrdered" name="add-dateOrdered" required placeholder="Enter Date Ordered">
+                <label for="add-deliveryDate">Delivery Date:</label>
+                <input type="date" min="2020-01-01" max="2030-12-31" id="add-deliveryDate" name="add-deliveryDate" name="add-deliveryDate" required placeholder="Enter Expected Delivery Date">
+                <label for="add-invoiceDueDate">Date Invoice Due:</label>
+                <input type="date" min="2020-01-01" max="2030-12-31" id="add-invoiceDueDate" name="add-invoiceDueDate" name="add-invoiceDueDate" required placeholder="Enter Date Invoice Due">
+                <!-- Creates a dynamically populated dropdown with productIDs (showing as the product name)-->
+                <label for="add-productID">Product: </label>
+                <select name="add-productID" id="add-productID" required>
+                    <option value="">Select a Product</option>
+                    {{#each productName}}
+                    <option value="{{this.productID}} {{this.listPrice}}">{{this.productName}}</option>
+                    {{/each}}
+                </select>
+                <br>
+                <br>
+                <!-- Creates a dynamically populated dropdown with storeIDs (showing as the store city)-->
+                <label for="add-storeID">Store: </label>
+                <select name="add-storeID" id="add-storeID" required>
+                    <option value="">Select a Store</option>
+                    {{#each storeCity as |store|}}
+                      <option value="{{store.storeID}}">{{store.city}}</option>
+                    {{/each}}
+                </select>
+                <br>
+                <br>
+                <input type = "submit">
+            </form>
+        </div>
+
+        <!--Set up the edit form container -->
+        <div class="edit-form" id="edit-form-container">
+            <h2>Edit StoreProduct</h2>
+            <form id="edit-storeProduct-form" >
+                <!-- Creates a dynamically populated dropdown with storeProductIDs (showing as the ID number)-->
+                <label for="edit-storeProductID">Store Product ID:</label>
+                <select id="edit-storeProductID" name="edit-storeProductID" onchange="updateForm()" onfocus="updateForm()" required>
+                    <option value="">Select store product to edit</option>
+                    {{#each data}}
+                        <option value="{{this.storeProductID}}">{{this.storeProductID}}</option>
+                    {{/each}}
+                </select>
+                <label for="edit-quantity">Quantity (Whole numbers from 1 to 100):</label>
+                <input type="number" min="1" max="100" id="edit-quantity" name="edit-quantity" name="edit-quantity" required>
+                <label for="edit-dateOrdered">Date Ordered:</label>
+                <input type="date" min="2020-01-01" max="2030-12-31" id="edit-dateOrdered" name="edit-dateOrdered" name="edit-dateOrdered" required>
+                <label for="edit-deliveryDate">Delivery Date:</label>
+                <input type="date" min="2020-01-01" max="2030-12-31" id="edit-deliveryDate" name="edit-deliveryDate" name="edit-deliveryDate" required>
+                <label for="edit-totalDue">Total Due (Do not include the dollar sign):</label>
+                <input type="number" step="0.000001" id="edit-totalDue" name="edit-totalDue" name="edit-totalDue" required>
+                <label for="edit-invoiceDueDate">Date Invoice Due:</label>
+                <input type="date" min="2020-01-01" max="2030-12-31" id="edit-invoiceDueDate" name="edit-invoiceDueDate" name="edit-invoiceDueDate" required>
+                <!-- Creates a dynamically populated dropdown with productIDs (showing as the product name)-->
+                <label for="edit-productID">Product: </label>
+                <select name="edit-productID" id="edit-productID" required>
+                    <option value="">Select a Product</option>
+                    {{#each productName}}
+                    <option value="{{this.productID}}">{{this.productName}}</option>
+                    {{/each}}
+                </select>
+                <br>
+                <br>
+                <!-- Creates a dynamically populated dropdown with storeIDs (showing as the store city)-->
+                <label for="edit-storeID">Store: </label>
+                <select name="edit-storeID" id="edit-storeID" required>
+                    <option value="">Select a Store </option>
+                    {{#each storeCity as |store|}}
+                      <option value="{{store.storeID}}">{{store.city}}</option>
+                    {{/each}}
+                </select>
+                <br>
+                <br>
+                <input type = "submit">
+            </form>
+        </div>
+
+        <!--Set up the search container -->
+        <div class="search-container" id="search-container">
+            <h3>Search </h3>
+            <form id="search-html" method='GET' action='/storeProducts'>
+                <label for="input-product">Search by Product: </label><input type="text" name="product" id="input-product-html-search">     <input type="submit">     <a href='/'><button>Reset</button></a>
+            </form>
+            <br>
+            <br>
+        </div>
+
+        <!--Dynamically display the table -->
+         <div id="table-container">
+            <h2>Store Product Details</h2>
+            <p>At least one <u>store</u> and one <u>product</u> must exist to be able to place a storeProduct order/transaction.</p>
+            <table id = "storeProducts-table">
+                <thead>
+                    <tr>
+                        <th><button onclick="showAddForm()">Add Store Product</button></th>
+                        <th></th>
+                        {{#each data.[0]}}
+                        <th>
+                            {{@key}}
+                        </th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each data}}
+                    <tr data-value={{this.storeProductID}}>
+                        <td><button onclick="showEditForm({{this.storeProductID}})">Edit</button></td>
+                        <td><button onclick="deleteStoreProduct({{this.storeProductID}})">Delete</button></td>
+                        <td>{{this.storeProductID}}</td>
+                        <td>{{this.quantity}}</td>
+                        <td>{{moment this.dateOrdered format="YYYY-MM-DD"}}</td>
+                        <td>{{moment this.deliveryDate format="YYYY-MM-DD"}}</td>
+                        <td>{{totalFixed this.totalDue}}</td>
+                        <td>{{moment this.invoiceDueDate format="YYYY-MM-DD"}}</td>
+                        <td>{{this.productName}}</td>
+                        <td>{{this.storeCity}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+                
+        </div>
+
+        
+    </main>
+
+    <script src="./js/show_storeProduct.js"></script>
+    <script src="./js/add_storeProduct.js"></script>
+    <script src="./js/delete_storeProduct.js"></script>
+    <script src="./js/update_storeProduct.js"></script>

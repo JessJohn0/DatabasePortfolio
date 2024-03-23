@@ -1,0 +1,91 @@
+<!--Citation for the following functions:
+Date: 3/9/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://handlebarsjs.com/guide/block-helpers.html#basic-block-variation
+-->
+
+<!--Citation for the following functions:
+Date: 3/9/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://stackoverflow.com/questions/41764373/how-to-register-custom-handlebars-helpers
+-->
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+-->
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Adapted from:
+Source URL: https://stackoverflow.com/questions/71242969/my-image-does-not-display-when-using-handlebars
+This is for getting the schema to display with handlebars.
+-->
+
+<!--index.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ice Cream Shop - Supply Chain</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Source+Sans+3:ital@0;1&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Ice Cream Shop</h1>
+        <!--The links for navigation -->
+        <nav>
+            <ul>
+                <li><a href="/">HOME</a></li>
+                <li><a href="/stores">Stores</a></li>
+                <li><a href="locationTypes">Location Type</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/productCategories">Product Categories</a></li>
+                <li><a href="/suppliers">Suppliers</a></li>
+                <li><a href="/storeProducts">Store Products</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!--Descriptions of the tables and the schema image -->
+        <h2>StoreProducts</h2>
+        <ul>
+            <li>This is the intersection table between Stores and Products and shows what stores have ordered what products.</li>
+        </ul>
+
+        <h2>Products</h2>
+        <ul>
+            <li>Products to sell to customers (such as ice cream, cones, etc.) Products may be ordered by the store, if so, the supplier will send an invoice for that product(s).</li>
+        </ul>
+
+        <h2>Suppliers</h2>
+        <ul>
+            <li>Information about the suppliers of the products.</li>
+        </ul>
+
+        <h2>Stores</h2>
+        <ul>
+            <li>Information about the stores of the ice cream shop chain.</li>
+        </ul>
+
+        <h2>Location Types</h2>
+        <ul>
+            <li>Information about the stores - what kind of area they are located in.</li>
+        </ul>
+        <h2>Product Categories</h2>
+        <ul>
+            <li>Information about the products - what kind of product are they such as packaging, food, etc.</li>
+        </ul>
+
+        <h2>Schema</h2>
+        <img src="images/schema.png" alt="Schema for the ice cream shop supply chain database">
+
+    </main>
+</body>
+</html>  

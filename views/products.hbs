@@ -1,0 +1,211 @@
+<!--Citation for the following functions:
+Date: 3/9/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://handlebarsjs.com/guide/block-helpers.html#basic-block-variation
+-->
+
+<!--Citation for the following functions:
+Date: 3/9/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://stackoverflow.com/questions/41764373/how-to-register-custom-handlebars-helpers
+-->
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%204%20-%20Dynamically%20Displaying%20Data
+-->
+
+<!--Citation for the following functions:
+Date: 2/29/2024
+Copied from /OR/ Adapted from /OR/ Based on:
+Source URL: https://github.com/osu-cs340-ecampus/nodejs-starter-app/tree/main/Step%206%20-%20Dynamically%20Filling%20Dropdowns%20and%20Adding%20a%20Search%20Box
+-->
+
+<!--Citation for the following functions:
+Date: 3/10/2024
+Adapted from:
+Source URL: https://stackoverflow.com/questions/34057595/allow-2-decimal-places-in-input-type-number
+Used step for listPrice as decimals need to be able to be added.For add and edit containers.
+-->
+
+<!--Citation for the following functions:
+Date: 3/10/2024
+Adapted from:
+Source URL: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/number
+listPrice is a number. For add and edit containers.
+-->
+
+<!-- products.hbs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Sofia">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald&family=Source+Sans+3:ital@0;1&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <h1>Products</h1>
+        <!--The links for navigation -->
+        <nav>
+            <ul>
+                <li><a href="/">HOME</a></li>
+                <li><a href="/stores">Stores</a></li>
+                <li><a href="locationTypes">Location Type</a></li>
+                <li><a href="/products">Products</a></li>
+                <li><a href="/productCategories">Product Categories</a></li>
+                <li><a href="/suppliers">Suppliers</a></li>
+                <li><a href="/storeProducts">StoreProducts</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!--Set up the add form container -->
+        <div class="add-form" id="add-form-container">
+            <h2>Add Product</h2>
+            <form id="add-product-form" method="POST" action="/add-product-form">
+                <label for="add-productName">Product Name:</label>
+                <input type="text" id="add-productName" name="add-productName" required>
+                <label for="add-description">Description (Optional):</label>
+                <input type="text" id="add-description" name="add-description">
+                <label for="add-brand">Brand (Optional):</label>
+                <input type="text" id="add-brand" name="add-brand">
+                <label for="add-listPrice">List Price (Do not include the dollar sign):</label>
+                <input type="number" step="0.000001" id="add-listPrice" name="add-listPrice" required>
+                <label for="add-productSize">Product Size:</label>
+                <input type="text" id="add-productSize" name="add-productSize" required>
+                <!-- Creates a dynamically populated dropdown with supplierIDs (showing as the supplier name)-->
+                <label for="add-supplier">Supplier:</label>
+                <select id="add-supplier" name="add-supplier" required>
+                    <option value="">Select a Supplier</option>
+                    {{#each data.supplierName}}
+                    <option value="{{this.supplierID}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
+                <br>
+                <br>
+                <!-- Creates a dynamically populated dropdown with productCategoryIDs (showing as the category)-->
+                <label for="add-productCategory">Product Category (Optional): </label>
+                <select name="add-productCategory" id="add-productCategory">
+                    <option value="">Select a Product Category</option>
+                    {{#each data.productCategory}}
+                      <option value="{{this.productCategoryID}}">{{this.category}}</option>
+                    {{/each}}
+                </select>
+                <br>
+                <br>
+                <input type="submit">
+            </form>
+        </div>
+
+        <!--Set up the edit form container -->
+        <div class="edit-form" id="edit-form-container">
+            <h2>Edit Product</h2>
+            <form id="edit-product-form" >
+                <!-- Creates a dynamically populated dropdown with productIDs (showing as the productID number)-->
+                <label for="edit-productID">Product ID:</label>
+                <select id="edit-productID" name="edit-productID" onchange="updateForm()" onfocus="updateForm()" required>
+                    <option value="">Select product to edit</option>
+                    {{#each data.products}}
+                        <option value="{{this.productID}}">{{this.productID}}</option>
+                    {{/each}}
+                </select>
+                <!--Pulls the productName from the productID -->
+                <label for="edit-productName">Product Name:</label>
+                <input type="text" id="edit-productName" name="edit-productName" required>
+                <option value="{{data.productID}}">{{data.productName}}</option>
+                <label for="edit-description">Product Description (Optional):</label>
+                <input type="text" id="edit-description" name="edit-description" placeholder="Edit product description">
+                <label for="edit-brand">Brand (Optional):</label>
+                <input type="text" id="edit-brand" name="edit-brand" placeholder="Edit product brand">
+                <label for="edit-listPrice">List Price (Do not include the dollar sign):</label>
+                <input type="number" step="0.000001" id="edit-listPrice" name="edit-listPrice" placeholder="Edit product price" required>
+                <label for="edit-productSize">Product Size:</label>
+                <input type="text" id="edit-productSize" name="edit-productSize" placeholder="Edit product size" required>
+                <!-- Creates a dynamically populated dropdown with supplierIDs (showing as the supplier name)-->
+                <label for="edit-supplier">Supplier:</label>
+                <select id="edit-supplier" name="edit-supplier" placeholder="Edit supplier" required>
+                    <option value="">Select a Supplier</option>
+                    {{#each data.supplierName}}
+                    <option value="{{this.supplierID}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
+                <br>
+                <br>
+                <!-- Creates a dynamically populated dropdown with productCategoryIDs (showing as the category)-->
+                <label for="edit-productCategory">Product Category (Optional): </label>
+                <select name="edit-productCategory" id="edit-productCategory">
+                    <option value="">Select a Product Category</option>
+                    {{#each data.productCategory}}
+                      <option value="{{this.productCategoryID}}">{{this.category}}</option>
+                    {{/each}}
+                </select>
+                <br>
+                <br>
+                <input type="submit">
+            </form>
+        </div>
+        <!--Set up the search container -->
+        <div class="search-container" id="search-container">
+            <h3>Search </h3>
+            <form id="search-html" method='GET' action='/products'>
+                <label for="input-name">Search by Supplier: </label><input type="text" name="name" id="input-name-html-search">     <input type="submit">     <a href='/'><button>Reset</button></a>
+            </form>
+            <br>
+            <br>
+        </div>
+        <div id="table-container">
+            
+            <!--Dynamically display the table -->
+            <h2>Product Details</h2>
+            <p>A <u>supplier</u> must exist before a product can be added.</p>
+            <p>A product must have a unique name so it is not confused with other products. Duplicate names cannot be added.</p>
+            <table id="products-table">
+                <thead>
+                    <tr>
+                        <th><button onclick="showAddForm()">Add Product</button></th>
+                        <th></th>
+                        {{#each data.products.[0]}}
+                        <th>
+                            {{@key}}
+                        </th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each data.products}}
+                    <tr data-value={{this.productID}}>
+                        <td><button onclick="showEditForm({{this.productID}})">Edit</button></td>
+                        <td><button onclick="deleteProduct({{this.productID}})">Delete</button></td>
+                        <td>{{this.productID}}</td>
+                        <td>{{this.productName}}</td>
+                        <td>{{this.description}}</td>
+                        <td>{{this.brand}}</td>
+                        <td>{{totalFixed this.listPrice}}</td>
+                        <td>{{this.productSize}}</td>
+                        <td>{{this.name}}</td>
+                        <td>{{this.category}}</td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+
+
+        </div>
+    </main>
+    
+    <script src="./js/show_product.js"></script>
+    <script src="./js/add_product.js"></script>
+    <script src="./js/update_product.js"></script>
+    <script src="./js/delete_product.js"></script>
+    
+
+</body>
+</html>
